@@ -1,4 +1,4 @@
-import styled from "styled-components/native";
+import styled, { css } from "styled-components/native";
 
 import { TouchableOpacity } from "react-native";
 
@@ -19,15 +19,17 @@ export const Container = styled(TouchableOpacity)`
 `;
 
 export const Title = styled.Text`
-  font-size: ${({ theme }: any) => theme.FONT_SIZE.MD}px;
-  color: ${({ theme }: any) => theme.COLORS.GRAY_200};
-  font-family: ${({ theme }: any) => theme.FONT_FAMILY.REGULAR};
+  ${({ theme }: any) => css`
+    font-size: ${theme.FONT_SIZE.MD}px;
+    color: ${theme.COLORS.GRAY_200};
+    font-family: ${theme.FONT_FAMILY.REGULAR};
+  `}
 `;
 
 export const Icon = styled(UsersThree).attrs(({ theme }: any) => ({
-    size: 32,
-    color: theme.COLORS.GREEN_700,
-    weight: "fill"
+  size: 32,
+  color: theme.COLORS.GREEN_700,
+  weight: "fill",
 }))`
-    margin-right: 20px
+  margin-right: 20px;
 `;
