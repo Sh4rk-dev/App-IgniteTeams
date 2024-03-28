@@ -1,6 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Alert, FlatList } from "react-native";
 import { useRoute } from "@react-navigation/native";
+
+import { AppError } from "@utils/AppError";
+
+import { PlayerStorageDTO } from "@storage/players/PlayerStorageDTO";
+import { playerAddByGroup } from "@storage/players/playerAddByGroup";
+import { playersGetByGroupAndTeam } from "@storage/players/playersGetBtGroupAndTeam";
 
 import { Input } from "@components/Input";
 import { Header } from "@components/Header";
@@ -12,9 +18,6 @@ import { ButtonIcon } from "@components/ButtonIcon";
 import { PlayerCard } from "@components/PlayerCard";
 
 import { Container, Form, HeaderList, NumberOfPlayers } from "./styles";
-import { AppError } from "@utils/AppError";
-import { playerAddByGroup } from "@storage/players/playerAddByGroup";
-import { playersGetByGroup } from "@storage/players/playersGetByGroup";
 
 type RouteParams = {
   group: string;
@@ -23,7 +26,7 @@ type RouteParams = {
 export function Players() {
   const [newPlayerName, setNewPlayerName] = useState("");
   const [team, setTeam] = useState("Time A");
-  const [players, setPlayers] = useState([]);
+  const [players, setPlayers] = useState<PlayerStorageDTO[]>([]);
 
   const route = useRoute();
   const { group } = route.params as RouteParams;
@@ -43,8 +46,7 @@ export function Players() {
 
     try {
       await playerAddByGroup(newPlayer, group);
-      const players = await playersGetByGroup(group);
-      console.log(players);
+      fetchPlayersByTeam();
     } catch (error) {
       if (error instanceof AppError) {
         Alert.alert("Nome Inválido", error.message);
@@ -54,6 +56,24 @@ export function Players() {
       }
     }
   }
+
+  async function fetchPlayersByTeam() {
+    try {
+      const playersByTeam = await playersGetByGroupAndTeam(group, team);
+
+      setPlayers(playersByTeam);
+    } catch (error) {
+      console.log(error);
+      Alert.alert(
+        "Pessoas",
+        "Não foi possível carregar as pessoas do time selecionado"
+      );
+    }
+  }
+
+  useEffect(() => {
+    fetchPlayersByTeam();
+  }, [team]);
 
   return (
     <Container>
@@ -89,9 +109,12 @@ export function Players() {
 
       <FlatList
         data={players}
-        keyExtractor={(item) => item}
+        keyExtractor={(item) => item.name}
         renderItem={({ item }) => (
-          <PlayerCard name={item} onRemove={() => console.log(item)} />
+          <PlayerCard
+            name={item.name}
+            onRemove={() => console.log(item.name)}
+          />
         )}
         ListEmptyComponent={() => (
           <ListEmpty message="Não há pessoas nesse time. " />
