@@ -2,7 +2,7 @@ import styled, { css } from "styled-components/native";
 
 import { TouchableOpacity } from "react-native";
 
-import { UsersThree } from "phosphor-react-native";
+import { UsersThree, Pencil } from "phosphor-react-native";
 
 export const Container = styled(TouchableOpacity)`
   width: 100%;
@@ -16,6 +16,7 @@ export const Container = styled(TouchableOpacity)`
 
   padding: 24px;
   margin-bottom: 12px;
+  padding-right: 80px;
 `;
 
 export const Title = styled.Text`
