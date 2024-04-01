@@ -1,6 +1,7 @@
 import { View } from "react-native";
-import { useTheme } from "styled-components/native";
 import { NavigationContainer } from "@react-navigation/native";
+
+import { useTheme } from "styled-components/native";
 
 import { AppRoutes } from "./app.routes";
 
